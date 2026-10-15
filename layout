@@ -1,6 +1,13 @@
-/* Marginalia styles. Link it in your page's <head> with: <link rel="stylesheet" href="style.css"> */
-/* Fonts used (add to <head>): Cormorant Garamond, DM Sans, Atkinson Hyperlegible from Google Fonts */
- 
+<!DOCTYPE html>
+<!-- Marginalia: ONE file. Save as index.html at the top of your GitHub repo. Add your notes in the OWNER SETTINGS near the bottom. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Marginalia: IB notes, practice papers and university planning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
 :root{--bg:#F3F2F6;--surface:#FFFFFF;--ink:#211B33;--muted:#6B6580;--line:#DAD6E4;--plum:#5B3A6B;--sage:#6F8F72;--brass:#A9833F;--tint:#E9E4F0;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17131F;--surface:#221D2E;--ink:#EEEAF5;--muted:#A49DB8;--line:#3A3349;--plum:#B692CC;--sage:#93B596;--brass:#D2AE6C;--tint:#2D2640}}
@@ -83,4 +90,309 @@ input,select,button{font-family:inherit}
 #tm{font:500 44px 'Cormorant Garamond',serif;margin-right:12px}dialog{border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);width:min(420px,92vw)}
 @media (max-width:760px){.two{grid-template-columns:1fr}.dh h2{font-size:38px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
- 
+.ai-off #aicard,.ai-off [data-plan]{display:none!important}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Marginalia</div>
+    <nav><button class="nl" data-v="lib" aria-pressed="true">Library</button><button class="nl" data-v="dash" aria-pressed="false">My dashboard</button><button class="nl" id="theme" title="Easy-read text" aria-label="Toggle easy-read text">Aa</button><button class="nl pill" id="acct">Sign up</button></nav>
+  </header>
+
+  <div id="lib">
+  <section class="hero">
+    <h1>Every IB note, shelved by grade.</h1>
+    <p>Choose your grade, open a subject, and download revision notes topic by topic. Grades 6 to 10 follow the MYP; grades 11 and 12 follow the Diploma Programme, with Higher and Standard Level notes kept apart.</p>
+    <div class="grades">
+      <small>Your grade</small>
+      <div class="ruler" id="ruler"></div>
+    </div>
+  </section>
+
+  <div class="bar">
+    <div class="info" id="info"></div>
+    <div class="tools">
+      <div class="seg" id="levels" hidden aria-label="Level">
+        <button data-l="all" aria-pressed="true">All</button>
+        <button data-l="HL" aria-pressed="false">HL</button>
+        <button data-l="SL" aria-pressed="false">SL</button>
+      </div>
+      <input class="search" id="q" type="search" placeholder="Search subjects" aria-label="Search subjects">
+    </div>
+  </div>
+
+  <main id="main"><div id="shelves"></div></main>
+
+  </div>
+  <section id="dash" hidden>
+   <div id="auth" class="card narrow" hidden><h2>Welcome back</h2><div class="seg" id="atabs" style="margin-top:8px"><button data-at="in" aria-pressed="true">Log in</button><button data-at="up" aria-pressed="false">Sign up</button></div>
+    <form id="af" class="form"><label id="anl" hidden>Your name<input id="an" autocomplete="name"></label><label>Email<input id="ae" type="email" required autocomplete="email"></label><label>Password<input id="ap" type="password" minlength="8" required autocomplete="current-password"></label><p class="none" id="aerr" role="alert"></p><button class="pri" type="submit" id="asub">Log in</button></form><p class="none">Free for every student. Your account and scores are saved in this browser on this device.</p></div>
+   <div id="gate" class="card narrow" hidden><h2 id="gt">Make your free profile</h2><p class="none">Track your scores, aim at your dream university and get quizzed by AI. Free, always.</p>
+    <form id="gf" class="form"><label>Your name<input id="gn" required></label><label>Your grade<select id="gg"></select></label><label>Target IB points (out of 45)<input id="gp" type="number" min="1" max="45" value="36"></label><label>Dream university<input id="gu" placeholder="e.g. University of Toronto"></label><button class="pri" type="submit">Save profile</button></form></div>
+   <div id="app" hidden>
+    <div class="dh"><div><h2 id="hello"></h2><p class="none" id="hsub"></p></div><div><button class="ghost" id="edit">Edit profile</button> <button class="ghost" id="lo">Log out</button></div></div>
+    <div class="stats" id="stats"></div>
+    <div class="two"><div class="card"><div class="ch"><h3>Score history</h3><select id="gs" aria-label="Subject"></select></div><div id="chart"></div></div>
+     <div class="card"><h3>Log a score</h3><div class="form"><label>Subject<select id="ls"></select></label><div class="row"><label>Score<input id="lv" type="number" min="0" step="any"></label><label>Out of<input id="lm" type="number" value="100"></label></div><div class="row"><label>Type<select id="lk"><option>Test</option><option>Internal assessment</option><option>Mock exam</option><option>Quiz</option></select></label><label>Date<input id="ld" type="date"></label></div><button class="pri" id="lb">Add score</button></div></div></div>
+    <div class="two"><div class="card"><h3>Dream universities</h3><div id="ul"></div><div class="row"><input id="un" placeholder="University" aria-label="University"><input id="uc" placeholder="Course" aria-label="Course"><input id="up" type="number" placeholder="Points" aria-label="Points needed" style="max-width:90px"></div><button class="ghost" id="ua">Add university</button></div>
+     <div class="card" id="aicard"><h3>AI practice papers</h3><div class="row"><select id="qs" aria-label="Subject"></select><select id="qt" aria-label="Topic"></select></div><div class="row"><select id="qp" aria-label="Paper type"><option value="mcq">Paper 1 style: multiple choice</option><option value="st">Paper 2 style: structured</option><option value="ex">Extended response</option></select><select id="ql" aria-label="Level"><option>SL</option><option>HL</option></select></div><button class="pri" id="qb">Start paper</button><div id="qa"></div></div></div>
+    <div class="card" style="margin-top:16px"><h3>Focus timer</h3><span id="tm">25:00</span><button class="ghost" id="ts">Start</button> <button class="ghost" id="tr">Reset</button></div>
+   </div>
+  </section>
+  <dialog id="pdlg" aria-label="University plan"><div id="pbody"></div><button class="ghost" id="pclose">Close</button></dialog>
+  <footer><span>Marginalia is a student study library and is not affiliated with the IBO.</span><span>Free for every student</span></footer>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Subject topics"></aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ================= OWNER SETTINGS (edit this part only) ================= */
+// Notes everyone can open. One line per note: ["Subject","Topic","Title students see","link or file path"]
+// Names can be written any way you like ("biology", "Cell Biology"). The link can be a Google Drive/Notion link,
+// or a file you add to your GitHub repo next to this file, e.g. "/cell-biology.pdf".
+const NOTES_LIST = [
+  // ["Biology", "Cell biology", "Cell biology summary", "https://drive.google.com/your-link"],
+];
+// AI practice papers and university plans cost money to run, so they are switched off (nobody pays anything).
+const AI_ON = false;
+/* ======================================================================== */
+/* Everything below makes the site work as ONE file: accounts and scores are saved in each student's own browser. */
+(()=>{const of=window.fetch.bind(window),J=k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},W=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const OK=(o,s=200)=>new Response(JSON.stringify(o),{status:s,headers:{"Content-Type":"application/json"}});
+const slug=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+const SYS='You are an IB (International Baccalaureate) study assistant for students. Reply with valid JSON only: no prose and no code fences. If the request is not about IB study or university planning, reply {"error":"off_topic"}.';
+if(!AI_ON)document.body.classList.add("ai-off");
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join(""),rid=()=>hex(crypto.getRandomValues(new Uint8Array(8)));
+async function hash(pw,salt){if(!(window.crypto&&crypto.subtle))return btoa(salt+pw);const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);return hex(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:new TextEncoder().encode(salt),iterations:150000},k,256))}
+async function ai(prompt){if(!AI_ON)return OK({error:"AI is switched off on this site."},503);let k=localStorage.getItem("m:key");if(!k){k=(window.prompt("Paste your Anthropic API key. It is saved only in this browser.")||"").trim();if(!k)return OK({error:"Add an API key to use the AI features."},503);localStorage.setItem("m:key",k)}
+try{const r=await of("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"content-type":"application/json","x-api-key":k,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-5-5",max_tokens:3500,system:SYS,messages:[{role:"user",content:prompt}]})});
+if(r.status===401){localStorage.removeItem("m:key");return OK({error:"That API key was not accepted."},401)}
+const j=await r.json();if(!r.ok)throw 0;const t=(j.content||[]).filter(c=>c.type==="text").map(c=>c.text).join(""),a=t.search(/[\[{]/),z=Math.max(t.lastIndexOf("]"),t.lastIndexOf("}"));return OK({data:JSON.parse(t.slice(a,z+1))})}catch(e){return OK({error:"The AI could not answer just now. Please try again."},502)}}
+window.fetch=async(u,o={})=>{u=String(u);
+if(u.split("?")[0]==="/notes.json")return OK({notes:NOTES_LIST.map(n=>({sub:slug(n[0]),topic:slug(n[1]),title:String(n[2]),url:String(n[3])}))});
+if(u.slice(0,5)!=="/api/")return of(u,o);
+const p=u.split("?")[0],b=(()=>{try{return JSON.parse(o.body)}catch(e){return{}}})();
+const U=J("m:users")||{},em=J("m:session"),me=em&&U[em]?U[em]:null,need=()=>me?null:OK({error:"Please log in first."},401);
+const clip=(s,n=120)=>String(s==null?"":s).trim().slice(0,n);
+if(p==="/api/me")return OK({user:me?{email:em,name:me.name}:null});
+if(p==="/api/signup"||p==="/api/login"){const e=clip(b.email,200).toLowerCase(),pw=String(b.password||"");if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e))return OK({error:"Enter a valid email address."},400);
+if(p==="/api/signup"){if(pw.length<8)return OK({error:"Use a password of at least 8 characters."},400);if(U[e])return OK({error:"That email already has an account in this browser. Try logging in."},409);const salt=rid();U[e]={name:clip(b.name,60)||e.split("@")[0],salt,hash:await hash(pw,salt),profile:null};W("m:users",U)}
+else if(!U[e]||U[e].hash!==await hash(pw,U[e].salt))return OK({error:"Email or password is not right."},401);
+W("m:session",e);return OK({user:{email:e,name:U[e].name}})}
+if(p==="/api/logout"){localStorage.removeItem("m:session");return OK({ok:true})}
+if(p==="/api/profile"){const n=need();if(n)return n;if((o.method||"GET")==="PUT"){me.profile=b.profile;W("m:users",U);return OK({ok:true})}return OK({profile:me.profile})}
+if(p==="/api/ai"){const n=need();if(n)return n;return ai(String(b.prompt||""))}
+return OK({error:"Not found"},404)}})();
+</script>
+<script>
+const MYP=[
+ {g:"Language and literature",c:"#5B3A6B",s:[
+  ["English Language & Literature",["Reading for meaning","Writing with purpose","Poetry and form","Persuasion and media","Oral communication"]]]},
+ {g:"Language acquisition",c:"#8A5A44",s:[
+  ["Spanish",["Greetings and identity","Daily routines","Past tenses","Travel and places","Opinions and debate"]],
+  ["French",["Introductions","Home and school","Passé composé","Food and culture","Future plans"]],
+  ["Hindi",["Script and sounds","Everyday conversation","Grammar and tenses","Stories and poems","Writing tasks"]],
+  ["German",["Greetings and numbers","Family and home","Cases and articles","Daily life","Opinions and plans"]]]},
+ {g:"Individuals and societies",c:"#A9833F",s:[
+  ["History",["Ancient civilisations","Medieval worlds","Revolutions","World wars","Source skills"]],
+  ["Geography",["Maps and landforms","Climate and weather","Population","Resources","Sustainability"]]]},
+ {g:"Internal subjects",c:"#2F7F86",s:[
+  ["Economics",["Needs and wants","Supply and demand","Money and banking","Global trade","Government and policy"]],
+  ["Business Management",["Enterprise","Marketing basics","Finance and budgets","People and teams","Operations"]]]},
+ {g:"Sciences",c:"#6F8F72",s:[
+  ["Biology",["Cells","Body systems","Ecosystems","Genetics","Evolution"]],
+  ["Chemistry",["Matter and states","Atoms and elements","Reactions","Acids and bases","Periodic table"]],
+  ["Physics",["Forces and motion","Energy","Waves","Electricity","Space"]]]},
+ {g:"Mathematics",c:"#3F5E8C",s:[
+  ["Mathematics",["Number and fractions","Algebra","Geometry","Statistics","Probability","Functions"]]]},
+ {g:"Portfolio",c:"#9C4A5E",s:[
+  ["Visual Arts",["Elements of art","Colour theory","Art history","Process journal"]],
+  ["Design",["Design cycle","Materials","Digital design","Evaluation"]],
+  ["Physical & Health Education",["Fitness","Team games","Nutrition","Wellbeing"]],
+  ["Music",["Elements of music","Listening skills","Performance","Composition"]]]}
+];
+// topic names ending in * are HL only
+const DP=[
+ {g:"Studies in language and literature",c:"#5B3A6B",s:[
+  ["English A: Language & Literature",["Readers, writers and texts","Time and space","Intertextuality","Paper 1 analysis","Paper 2 essay","Higher level essay*"],1],
+  ["English A: Literature",["Poetry","Prose and drama","Literary theory","Individual oral","Paper 1 analysis","Higher level essay*"],1]]},
+ {g:"Language acquisition",c:"#8A5A44",s:[
+  ["Spanish B",["Identities","Experiences","Human ingenuity","Social organisation","Sharing the planet","Literature set works*"],1],
+  ["French B",["Identités","Expériences","Ingéniosité humaine","Organisation sociale","Partage de la planète","Literature set works*"],1],
+  ["English B",["Identities","Experiences","Human ingenuity","Social organisation","Sharing the planet","Literature set works*"],1],
+  ["Hindi B",["Identities","Experiences","Human ingenuity","Social organisation","Sharing the planet","Literature set works*"],1],
+  ["German B",["Identitäten","Erfahrungen","Menschlicher Erfindungsgeist","Soziale Organisation","Den Planeten teilen","Literature set works*"],1]]},
+ {g:"Individuals and societies",c:"#A9833F",s:[
+  ["History",["Authoritarian states","Causes of 20th-century wars","Cold War","Source evaluation","Internal assessment","Regional option: Asia*"],1],
+  ["Psychology",["Biological approach","Cognitive approach","Sociocultural approach","Abnormal psychology","Research methods","Qualitative research*"],1],
+  ["Geography",["Changing population","Global climate","Global resource consumption","Power and networks","Fieldwork","Global interactions*"],1]]},
+ {g:"Internal subjects",c:"#2F7F86",s:[
+  ["Economics",["Introduction to economics","Microeconomics","Macroeconomics","The global economy","Calculations","Extension: HL only*"],1],
+  ["Business Management",["Business organisation","Human resources","Finance and accounts","Marketing","Operations","Case study prep*"],1]]},
+ {g:"Sciences",c:"#6F8F72",s:[
+  ["Biology",["Cell biology","Molecular biology","Genetics","Ecology","Evolution","Human physiology","Nucleic acids*","Plant biology*"],1],
+  ["Chemistry",["Stoichiometry","Atomic structure","Bonding","Energetics","Kinetics","Equilibrium","Organic chemistry","Redox processes*"],1],
+  ["Physics",["Measurements","Mechanics","Thermal physics","Waves","Electricity and magnetism","Circular motion and gravitation","Quantum and nuclear","Fields*"],1],
+  ["Computer Science",["System fundamentals","Computer organisation","Networks","Computational thinking","Abstract data structures*","Resource management*"],1]]},
+ {g:"Mathematics",c:"#3F5E8C",s:[
+  ["Maths: Analysis & Approaches",["Number and algebra","Functions","Geometry and trigonometry","Probability and statistics","Calculus","Further calculus*","Proof*"],1],
+  ["Maths: Applications & Interpretation",["Number and algebra","Functions","Geometry and trigonometry","Probability and statistics","Calculus","Graph theory*","Matrices*"],1]]},
+ {g:"Portfolio",c:"#9C4A5E",s:[
+  ["Visual Arts",["Comparative study","Process portfolio","Exhibition","Curatorial rationale"],1],
+  ["Music",["Exploring music","Experimenting","Presenting","Creating portfolio"],1],
+  ["Theatre",["Theatre in context","Collaborative project","Director's notebook*","Research presentation*"],1]]},
+ {g:"The Diploma core",c:"#2E2A3D",s:[
+  ["Theory of Knowledge",["Knowers and knowing","Areas of knowledge","Exhibition","Essay guide"]],
+  ["Extended Essay",["Choosing a question","Research methods","Writing and structure","Reflection and viva"]],
+  ["CAS",["Creativity","Activity","Service","Learning outcomes"]]]}
+];
+let grade=11, level="all", query="";
+const $=s=>document.querySelector(s);
+const isDP=()=>grade>=11;
+function data(){return isDP()?DP:MYP}
+function renderRuler(){
+  $("#ruler").innerHTML=[6,7,8,9,10,11,12].map(g=>`<button aria-pressed="${g===grade}" data-g="${g}">${g}<span>${g>=11?'Diploma':'MYP '+(g-5)}</span></button>`).join("");
+}
+function levelOf(subj){return subj[2]?true:false}
+function renderShelves(){
+  $("#levels").hidden=!isDP();
+  const q=query.toLowerCase();
+  let total=0,html="";
+  data().forEach(grp=>{
+    const subs=grp.s.filter(s=>s[0].toLowerCase().includes(q)||grp.g.toLowerCase().includes(q));
+    if(!subs.length)return;
+    total+=subs.length;
+    html+=`<section class="group"><h2>${grp.g}<em>${subs.length} ${subs.length>1?'subjects':'subject'}</em></h2><div class="shelf">`+
+    subs.map(s=>{
+      const n=levelOf(s)?s[1].filter(t=>level==="all"||level==="HL"||!t.endsWith("*")).length:s[1].length;
+      const tags=levelOf(s)?(s[0]==="Theory of Knowledge"?'':`<span class="tag hl">HL</span><span class="tag">SL</span>`):'';
+      const key=encodeURIComponent(s[0]);
+      return `<button class="book" data-s="${key}" style="--c:${grp.c}"><span class="spine"></span><span class="bk"><h3>${s[0]}</h3><span class="meta">${tags}<span>${n} topics</span></span></span></button>`;
+    }).join("")+`</div></section>`;
+  });
+  $("#shelves").innerHTML=html||`<p class="empty">No subjects match "${query}". Try a shorter name, like "bio" or "math".</p>`;
+  $("#info").innerHTML=isDP()?`<b>Grade ${grade}</b> · Diploma Programme · ${total} subjects`:`<b>Grade ${grade}</b> · Middle Years Programme, Year ${grade-5} · ${total} subjects`;
+}
+function openSubject(name,keep){CUR=name;if(!keep)LASTF=document.activeElement;
+  let subj,grp;
+  data().forEach(g=>g.s.forEach(s=>{if(s[0]===name){subj=s;grp=g}}));
+  const dp=isDP()&&levelOf(subj);
+  const topics=subj[1].filter(t=>!(dp&&level==="SL"&&t.endsWith("*")));
+  $("#panel").innerHTML=`<button class="x" id="close">Close</button>
+   <div class="sub" style="margin-top:6px">${grp.g} · Grade ${grade}</div>
+   <h2>${subj[0]}</h2>
+   <p class="sub">${dp?(level==="all"?'Showing all topics. Topics marked HL are Higher Level only.':level+' notes only.'):'Pick a topic and download the notes you need.'}</p>`+
+   topics.map(t=>{
+     const hl=t.endsWith("*"), nm=t.replace("*","");
+     return `<div class="topic"><div class="t"><h3>${nm}</h3>${hl?'<span class="tag hl">HL only</span>':''}</div>${noteHTML(subj[0],nm)}</div>`;
+   }).join("");
+  $("#panel").classList.add("on");$("#scrim").classList.add("on");
+  if(!keep){$("#panel").scrollTop=0;$("#close").focus()}
+}
+function closePanel(){const was=$("#panel").classList.contains("on");$("#panel").classList.remove("on");$("#scrim").classList.remove("on");if(was&&LASTF&&LASTF.focus){LASTF.focus();LASTF=null}}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),2600)}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-g]");if(g){grade=+g.dataset.g;level="all";document.querySelectorAll("#levels button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l==="all"));renderRuler();renderShelves();closePanel();return}
+  const l=e.target.closest("[data-l]");if(l){level=l.dataset.l;document.querySelectorAll("#levels button").forEach(b=>b.setAttribute("aria-pressed",b===l));renderShelves();return}
+  const s=e.target.closest("[data-s]");if(s){openSubject(decodeURIComponent(s.dataset.s));return}
+
+  if(e.target.id==="close"||e.target.id==="scrim")closePanel();
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closePanel()});
+/* ===== accounts, notes, AI ===== */
+var LASTF=null;let ME="",CURNAME="",DB=null,UID=null,CAN=false,AS=null,SMP=null,NOTES=[],P=null,CUR=null,QZ=null,PRED=0,PEND=null,tmI=null,tmS=1500;
+const LSK="marginalia:profile",$$=s=>document.querySelectorAll(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>new Date().toISOString().slice(0,10);
+const band=p=>p>=80?7:p>=70?6:p>=60?5:p>=50?4:p>=40?3:p>=30?2:1;
+const subsFor=g=>(g>=11?DP:MYP).flatMap(x=>x.s);
+async function loadP(){try{return(await api("/api/profile")).profile}catch(e){return null}}
+async function saveP(){try{await api("/api/profile","PUT",{profile:P})}catch(e){toast("Could not save. Check your connection.")}}
+async function api(url,method="GET",body){const r=await fetch(url,{method,credentials:"same-origin",headers:{"Content-Type":"application/json","X-Requested-With":"marginalia"},body:body?JSON.stringify(body):undefined});let j={};try{j=await r.json()}catch(e){}if(!r.ok){const e=new Error(j.error||"Something went wrong. Try again.");e.status=r.status;throw e}return j}
+async function loadNotes(){try{const r=await fetch("/notes.json",{cache:"no-cache"});NOTES=(await r.json()).notes}catch(e){}if($("#panel").classList.contains("on")&&CUR)openSubject(CUR,true)}
+function updAcct(){$("#acct").textContent=P?"Hi, "+P.name.split(" ")[0]:"Log in"}
+(async()=>{SMP={json:async p=>(await api("/api/ai","POST",{prompt:p})).data};
+try{if(localStorage.getItem("marginalia:read")==="1")document.body.classList.add("read")}catch(e){}
+try{const m=await api("/api/me");if(m.user){ME=m.user.email;CURNAME=m.user.name;CAN=!!m.user.admin}}catch(e){}
+await loadNotes();P=ME?await loadP():null;updAcct()})();
+const slug=s=>String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+function noteHTML(sub,nm){const ns=NOTES.filter(n=>n.sub===slug(sub)&&n.topic===slug(nm));
+return `<div class="dl">${ns.length?ns.map(n=>`<a class="nt" href="${esc(n.url)}" target="_blank" rel="noopener">${esc(n.title)}</a>`).join(""):'<span class="none">Notes coming soon</span>'}</div>`}
+function showView(v){$("#lib").hidden=v!=="lib";$("#dash").hidden=v!=="dash";$$(".nl[data-v]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));closePanel();if(v==="dash"){ME?(P?renderApp():showGate()):showAuth()}window.scrollTo(0,0)}
+function showGate(){$("#auth").hidden=true;$("#app").hidden=true;$("#gate").hidden=false;$("#gg").innerHTML=[6,7,8,9,10,11,12].map(g=>`<option value="${g}">Grade ${g}</option>`).join("");$("#gn").value=P?P.name:(CURNAME||"");$("#gg").value=P?P.grade:11;$("#gp").value=P?P.target:36;$("#gu").value="";$("#gt").textContent=P?"Edit your profile":"Make your free profile";$("#gu").closest("label").hidden=!!P}
+function fillTopics(){$("#ql").hidden=P.grade<11;const s=subsFor(P.grade).find(x=>x[0]===$("#qs").value);$("#qt").innerHTML=s?s[1].map(t=>`<option>${esc(t.replace("*",""))}</option>`).join(""):""}
+function renderApp(){$("#gate").hidden=true;$("#app").hidden=false;$("#hello").textContent="Hello, "+P.name;$("#hsub").textContent="Grade "+P.grade+(P.grade>=11?" · aiming for "+P.target+" points":" · Middle Years Programme");
+const so=subsFor(P.grade).map(s=>`<option>${esc(s[0])}</option>`).join("");$("#ls").innerHTML=so;$("#qs").innerHTML=so;$("#gs").innerHTML='<option value="all">All subjects</option>'+so;fillTopics();$("#ld").value=today();refresh()}
+function refresh(){stats();unis();chart()}
+function stats(){const sc=P.scores,avg=sc.length?Math.round(sc.reduce((a,b)=>a+b.pct,0)/sc.length):null,by={};sc.forEach(s=>(by[s.sub]=by[s.sub]||[]).push(s));
+const gr=Object.entries(by).map(([k,v])=>{const l=[...v].sort((a,b)=>a.d.localeCompare(b.d)).slice(-3);return[k,band(l.reduce((a,b)=>a+b.pct,0)/l.length)]}).sort((a,b)=>b[1]-a[1]);
+PRED=gr.slice(0,6).reduce((a,b)=>a+b[1],0);const dp=P.grade>=11,card=(l,v,s)=>`<div class="card stat"><span>${l}</span><b>${v}</b><small>${s}</small></div>`;
+$("#stats").innerHTML=card("Average score",avg===null?"—":avg+"%",sc.length+" scores logged")+card("Strongest subject",gr[0]?esc(gr[0][0]):"—",gr[0]?"Predicted "+gr[0][1]+" out of 7":"Log a score to see")+(dp?card("Predicted IB points",PRED,"best 6 subjects out of 42, plus up to 3 for core · goal "+P.target):card("Average level",gr.length?(gr.reduce((a,b)=>a+b[1],0)/gr.length).toFixed(1):"—","out of 7"))+card("Study streak",((P.streak&&P.streak.n)||0)+" days","scores and quizzes count")}
+function unis(){$("#ul").innerHTML=P.unis.length?P.unis.map((u,i)=>`<div class="uni"><div><b>${esc(u.n)}</b><small>${esc(u.c||"")}${u.p?" · needs "+u.p+" pts":""}</small>${u.p&&P.grade>=11?`<div class="pb"><i style="width:${Math.min(100,Math.round(PRED/u.p*100))}%"></i></div>`:""}</div><button class="ghost" data-plan="${i}">Plan</button><button class="rm" data-ru="${i}" aria-label="Remove ${esc(u.n)}">×</button></div>`).join(""):'<p class="none">Add the universities you are aiming for.</p>'}
+function chart(){const s=$("#gs").value,arr=P.scores.filter(x=>s==="all"||x.sub===s).sort((a,b)=>a.d.localeCompare(b.d));
+if(!arr.length){$("#chart").innerHTML='<p class="none">Log your first score to see your graph.</p>';return}
+const W=600,H=240,L=34,R=12,T=12,B=28,n=arr.length,x=i=>L+(n===1?(W-L-R)/2:i*(W-L-R)/(n-1)),y=v=>T+(100-v)*(H-T-B)/100;let g="";
+[0,25,50,75,100].forEach(v=>g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)">${v}</text>`);
+g+=`<polyline points="${arr.map((a,i)=>x(i)+","+y(a.pct)).join(" ")}" fill="none" stroke="var(--plum)" stroke-width="2.5"/>`+arr.map((a,i)=>`<circle cx="${x(i)}" cy="${y(a.pct)}" r="5" fill="var(--brass)"><title>${esc(a.sub)}, ${esc(a.k)}: ${a.pct}% on ${a.d}</title></circle>`).join("")+`<text x="${L}" y="${H-8}" font-size="11" fill="var(--muted)">${arr[0].d}</text><text x="${W-R}" y="${H-8}" text-anchor="end" font-size="11" fill="var(--muted)">${arr[n-1].d}</text>`;
+$("#chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Score history chart" style="width:100%;height:auto">${g}</svg>`}
+function touch(){const s=P.streak||{n:0,last:""},t=today();if(s.last===t)return;const y=new Date(Date.now()-864e5).toISOString().slice(0,10);P.streak={n:s.last===y?s.n+1:1,last:t}}
+function showQ(){const z=QZ,out=$("#qa");if(z.mode==="w"&&z.i<z.qs.length){showW();return}if(z.i>=z.qs.length){out.innerHTML=`<p class="qq">${z.s} of ${z.max||z.qs.length}${z.max?" marks":""} on ${esc(z.top)}</p><button class="pri" id="qsave">Save to my scores</button> <button class="ghost" id="qb">New quiz</button>`;return}
+const q=z.qs[z.i];out.innerHTML=`<p class="qq">${z.i+1}. ${esc(q.q)}</p>`+q.options.map((o,j)=>`<button class="opt" data-o="${j}">${esc(o)}</button>`).join("")+'<p class="none" id="fb"></p>'}
+function tmShow(){$("#tm").textContent=String(Math.floor(tmS/60)).padStart(2,"0")+":"+String(tmS%60).padStart(2,"0")}
+$("#gf").addEventListener("submit",async e=>{e.preventDefault();const un=$("#gu").value.trim();P=Object.assign({scores:[],unis:[],streak:{n:0,last:""}},P||{},{name:$("#gn").value.trim(),grade:+$("#gg").value,target:+$("#gp").value||36});if(un&&!P.unis.length)P.unis.push({n:un,c:"",p:P.target});await saveP();updAcct();renderApp()});
+$("#gs").addEventListener("change",chart);
+/* ===== log in, sign up, university planner ===== */
+const enc=new TextEncoder();let AT="in",PI=0,PG=0;
+function setTab(t){AT=t;$$("[data-at]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.at===t));$("#anl").hidden=t!=="up";$("#asub").textContent=t==="up"?"Create account":"Log in";$("#aerr").textContent="";$("#ap").autocomplete=t==="up"?"new-password":"current-password"}
+function showAuth(){$("#app").hidden=true;$("#gate").hidden=true;$("#auth").hidden=false;setTab("in")}
+$("#af").addEventListener("submit",async e=>{e.preventDefault();const er=$("#aerr"),btn=$("#asub");er.textContent="";btn.disabled=true;
+try{const r=await api(AT==="up"?"/api/signup":"/api/login","POST",{email:$("#ae").value.trim(),password:$("#ap").value,name:$("#an").value.trim()});
+ME=r.user.email;CURNAME=r.user.name;CAN=!!r.user.admin;P=await loadP();await loadNotes();$("#ap").value="";updAcct();P?renderApp():showGate()}catch(x){er.textContent=x.message}finally{btn.disabled=false}});
+function planHead(u){return `<h3>${esc(u.n)}</h3><p class="none">${esc(u.c||"Course not chosen")}${u.p?", target "+u.p+" pts":""}</p><label style="display:block;font-size:13px;color:var(--muted)">Show tips for<select id="pg">${[6,7,8,9,10,11,12].map(g=>`<option value="${g}"${g===PG?" selected":""}>Grade ${g}${g===P.grade?" (you)":""}</option>`).join("")}</select></label>`}
+function planBody(d,u){const L=a=>"<ul>"+[].concat(a||[]).map(x=>`<li>${esc(x)}</li>`).join("")+"</ul>",dp=P.grade>=11,gap=u.p&&dp?(PRED>=u.p?"On track":(u.p-PRED)+" pts to find"):"Starts in grade 11";
+return `<div class="chips"><div class="chip">Typical IB points<b>${esc(d.typical_points||"Varies")}</b></div><div class="chip">Your predicted<b>${dp?(PRED||"Log scores"):"Starts in grade 11"}</b></div><div class="chip">Gap to your target<b>${gap}</b></div></div><p>${esc(d.competitiveness||"")}</p><h4>HL and subject requirements</h4><p>${esc(d.hl_subjects||"")}</p>${L(d.required_subjects)}<h4>Other requirements</h4>${L(d.other_requirements)}<h4>Your grade ${PG} tips</h4>${L(d.grade_tips)}<h4>Next year's focus</h4><p>${esc(d.next_grade_focus||"")}</p><p class="none">AI-written guide. Always confirm on the university's own admissions page.</p><a class="nt" target="_blank" rel="noopener" href="https://www.google.com/search?q=${encodeURIComponent(u.n+" "+(u.c||"")+" IB admission requirements")}">Search official requirements</a>`}
+async function openPlan(i,g){const u=P.unis[i],b=$("#pbody");PI=i;PG=g||P.grade;P.plans=P.plans||{};const key=[u.n,u.c||"",PG].join("|").toLowerCase();b.innerHTML=planHead(u)+'<p class="none">Building your grade '+PG+' plan…</p>';if(!$("#pdlg").open)$("#pdlg").showModal();
+let d=P.plans[key];if(!d){if(!SMP){b.innerHTML=planHead(u)+'<p class="none">The AI planner runs inside the Claude viewer and asks for permission once.</p>';return}
+try{d=await SMP.json(`You are an IB university admissions advisor. University: "${u.n}". Course: "${u.c||"not chosen"}". The student is in grade ${PG} (grades 6 to 10 are the MYP, 11 and 12 the Diploma Programme) and wants to apply. Return ONLY JSON: {"typical_points":string, typical IB Diploma total or 'varies',"hl_subjects":string,"required_subjects":[strings],"other_requirements":[strings such as essays, interviews, admissions tests, deadlines],"competitiveness":one sentence,"grade_tips":[4 to 6 specific actions for a student in grade ${PG} aiming at this university],"next_grade_focus":one sentence}. Use widely published requirements. If unsure of a figure, say it varies and tell the student to check the official admissions page. Never invent statistics.`,{cache:false});P.plans[key]=d;await saveP()}catch(x){b.innerHTML=planHead(u)+'<p class="none">Could not build the plan right now. Try again in a moment.</p>';return}}
+b.innerHTML=planHead(u)+planBody(d,u)}
+document.addEventListener("click",e=>{const t=e.target,a=t.closest("[data-at]"),pl=t.closest("[data-plan]");if(a)setTab(a.dataset.at);if(pl)openPlan(+pl.dataset.plan);if(t.id==="pclose")$("#pdlg").close();if(t.id==="lo"){api("/api/logout","POST").catch(()=>{}).then(()=>{ME="";P=null;CAN=false;updAcct();showView("lib");loadNotes()})}});
+document.addEventListener("change",e=>{if(e.target.id==="pg")openPlan(PI,+e.target.value)});
+/* ===== IB practice papers ===== */
+const ul=a=>"<ul>"+[].concat(a||[]).map(x=>`<li>${esc(x)}</li>`).join("")+"</ul>";
+const SPEC={mcq:'Write 6 IB Paper 1 style multiple-choice questions. Where the subject suits it, give each a short stimulus or data. Use 4 plausible options with distractors based on common misconceptions, and mix recall, application and analysis or calculation. Return a JSON array of {"q":string,"options":[4 strings],"answer":0 to 3,"why":string}.',st:'Write 3 IB Paper 2 style structured questions worth 4, 6 and 8 marks. Use real IB command terms (state, outline, explain, analyse, evaluate and so on) and include a short stimulus, data set or case where the subject suits it. Return a JSON array of {"stimulus":string or "","question":string,"marks":integer,"command_term":string,"scheme":[mark scheme points, one per mark]}.',ex:'Write 1 IB extended-response or essay question worth 15 marks, with an IB command term and a short stimulus if suitable. Return a JSON array holding one {"stimulus":string or "","question":string,"marks":15,"command_term":string,"scheme":[indicative content and assessment criteria points]}.'};
+async function startPaper(){const sub=$("#qs").value,top=$("#qt").value,kind=$("#qp").value,out=$("#qa");if(!SMP){out.innerHTML='<p class="none">AI papers run inside the Claude viewer and ask for permission once.</p>';return}
+const lvl=P.grade>=11?"IB Diploma "+$("#ql").value+" level":"MYP Year "+(P.grade-5);out.innerHTML='<p class="none">Setting your paper…</p>';
+try{const qs=await SMP.json(`You are an IB chief examiner. Subject: ${sub}. Topic: ${top}. Level: ${lvl}. ${SPEC[kind]} Match real IB exam wording, structure and difficulty. Return ONLY the JSON array.`,{cache:false});
+if(!Array.isArray(qs)||!qs.length)throw 0;const w=kind!=="mcq";QZ={sub,top,qs,i:0,s:0,done:false,mode:w?"w":"m",kind:{mcq:"Paper 1 style",st:"Paper 2 style",ex:"Extended response"}[kind],max:w?qs.reduce((a,q)=>a+(+q.marks||0),0):0};showQ()}catch(e){out.innerHTML='<p class="none">Could not set a paper right now. Try again in a moment.</p>'}}
+function showW(){const z=QZ,q=z.qs[z.i];$("#qa").innerHTML=`<p class="none">${esc(z.kind)}, question ${z.i+1} of ${z.qs.length}</p>${q.stimulus?`<div class="stim">${esc(q.stimulus)}</div>`:""}<p class="qq">${esc(q.question)} <b>[${+q.marks||0} marks]</b></p><textarea id="wa" rows="7" aria-label="Your answer" placeholder="Write your answer as you would in the exam"></textarea><button class="pri" id="wm">Mark my answer</button><div id="wr"></div>`}
+async function markW(){const z=QZ,q=z.qs[z.i],a=$("#wa").value.trim(),r=$("#wr");if(a.length<5){toast("Write an answer first");return}r.innerHTML='<p class="none">Marking…</p>';$("#wm").disabled=true;
+try{const m=await SMP.json(`You are a strict but fair IB examiner. Mark this answer out of ${q.marks} using the mark scheme.\nQuestion: ${q.question}\nStimulus: ${q.stimulus||"none"}\nMark scheme: ${[].concat(q.scheme||[]).join(" | ")}\nStudent answer: ${a}\nReturn ONLY JSON: {"awarded":integer from 0 to ${q.marks},"went_well":[strings],"to_improve":[strings tied to the mark scheme and the command term],"full_marks_answer":a concise model answer}.`,{cache:false});
+const aw=Math.max(0,Math.min(+q.marks||0,Math.round(+m.awarded||0)));z.s+=aw;$("#wa").disabled=true;
+r.innerHTML=`<p class="qq">${aw} / ${q.marks} marks</p><h4>What went well</h4>${ul(m.went_well)}<h4>To improve</h4>${ul(m.to_improve)}<h4>Model answer</h4><p>${esc(m.full_marks_answer||"")}</p><button class="ghost" data-next>${z.i===z.qs.length-1?"See result":"Next question"}</button>`}catch(e){$("#wm").disabled=false;r.innerHTML='<p class="none">Could not mark that right now. Try again.</p>'}}
+document.addEventListener("click",e=>{if(e.target.id==="wm")markW()});
+
+$("#qs").addEventListener("change",()=>P&&fillTopics());
+document.addEventListener("click",async e=>{const t=e.target,id=t.id;
+const nv=t.closest("[data-v]");if(nv){showView(nv.dataset.v);return}
+if(id==="acct"){showView("dash");return}
+if(id==="theme"){const on=document.body.classList.toggle("read");try{localStorage.setItem("marginalia:read",on?"1":"0")}catch(x){}t.setAttribute("aria-pressed",on);return}
+if(id==="edit"){showGate();return}
+if(id==="lb"){const v=parseFloat($("#lv").value),m=parseFloat($("#lm").value)||100;if(isNaN(v)||v<0||v>m){toast("Enter a score between 0 and the maximum");return}P.scores.push({sub:$("#ls").value,pct:Math.round(v/m*1000)/10,d:$("#ld").value||today(),k:$("#lk").value});touch();await saveP();$("#lv").value="";refresh();updAcct();toast("Score added");return}
+if(id==="ua"){const n=$("#un").value.trim();if(!n){toast("Type a university name first");return}P.unis.push({n,c:$("#uc").value.trim(),p:+$("#up").value||0});$("#un").value=$("#uc").value=$("#up").value="";await saveP();unis();return}
+const ru=t.closest("[data-ru]");if(ru){P.unis.splice(+ru.dataset.ru,1);await saveP();unis();return}
+if(id==="qb"){startPaper();return}
+if(id==="qsave"){P.scores.push({sub:QZ.sub,pct:Math.round(QZ.s/(QZ.max||QZ.qs.length)*100),d:today(),k:QZ.kind||"Quiz"});touch();await saveP();refresh();toast("Quiz score saved");return}
+const o=t.closest("[data-o]");if(o&&QZ&&!QZ.done){QZ.done=true;const q=QZ.qs[QZ.i],j=+o.dataset.o;$$("#qa .opt").forEach((b,k)=>{b.disabled=true;if(k===q.answer)b.classList.add("ok");else if(k===j)b.classList.add("bad")});if(j===q.answer)QZ.s++;$("#fb").innerHTML=(j===q.answer?"Correct. ":"Not quite. ")+esc(q.why||"")+' <button class="ghost" data-next>'+(QZ.i===QZ.qs.length-1?"See result":"Next")+"</button>";return}
+if(t.closest("[data-next]")){QZ.i++;QZ.done=false;showQ();return}
+if(id==="ts"){if(tmI){clearInterval(tmI);tmI=null;t.textContent="Start"}else{t.textContent="Pause";tmI=setInterval(()=>{if(--tmS<=0){clearInterval(tmI);tmI=null;tmS=1500;$("#ts").textContent="Start";toast("Focus session done. Take a 5 minute break.")}tmShow()},1000)}return}
+if(id==="tr"){clearInterval(tmI);tmI=null;tmS=1500;$("#ts").textContent="Start";tmShow();return}
+});
+$("#q").addEventListener("input",e=>{query=e.target.value.trim();renderShelves()});
+renderRuler();renderShelves();
+</script>
+</body>
+</html>
